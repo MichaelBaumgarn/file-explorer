@@ -30,6 +30,7 @@ type Props = {
 // todos: would be good if folders had more unique identifier than name
 const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
   const [folderName, setFolderName] = useState<any>({});
+  const [fileName, setFileName] = useState<any>({});
   const [currentFolders, setCurrentFolders] = useState([...initialFolders]);
 
   const handleFolderClick = (folder: Folder, index: number) => {
@@ -49,6 +50,22 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     } else {
       setCurrentFolders([...currentFolders, folder]);
     }
+  };
+
+  const handleFileClick = () => {
+    return null;
+  };
+
+  const handleCreateFile = (index: number, currentFolder: Folder) => {
+    const newFile: Folder = {
+      name: fileName[index],
+      type: "file",
+    };
+
+    addFolder(currentFolders[0], currentFolder.name, newFile);
+
+    setCurrentFolders([...currentFolders]);
+    setFileName((prev: any) => ({ ...prev, [index]: "" }));
   };
 
   const handleDeleteFolder = (folder: Folder, index: number) => {
@@ -183,6 +200,26 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
                 onClick={() => handleCreateFolder(index, folder)}
               >
                 Create folder
+              </Button>
+            </VStack>
+            <VStack alignItems="flex-start">
+              <Input
+                size="xs"
+                width="auto"
+                value={fileName[index]}
+                onChange={(e) =>
+                  setFileName((prev: any) => ({
+                    ...prev,
+                    [index]: e.target.value,
+                  }))
+                }
+              ></Input>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() => handleCreateFile(index, folder)}
+              >
+                Create File
               </Button>
             </VStack>
           </Box>
