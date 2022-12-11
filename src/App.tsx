@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Input,
-  ListItem,
-  UnorderedList,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Input, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 import { ChakraProvider } from "@chakra-ui/react";
@@ -20,7 +11,6 @@ export type Folder = {
   isOpen?: boolean;
 };
 
-// todo: names should be unique
 function App() {
   return (
     <div className="App">
@@ -37,6 +27,7 @@ type Props = {
   initialFolders: Folder[];
 };
 
+// todos: would be good if folders had more unique identifier than name
 const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
   const [folderName, setFolderName] = useState<any>({});
   const [currentFolders, setCurrentFolders] = useState([...initialFolders]);
@@ -45,7 +36,6 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     if (folder.name === currentFolders[currentFolders.length - 1].name) {
       return;
     }
-    console.log("open", folder, index);
 
     // Add the clicked folder to the current folders list
     // getFolderByName(folder.name)
@@ -79,14 +69,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     }
   };
 
-  const handleCreateFolder = (
-    // name: string,
-    index: number,
-    currentFolder: Folder
-  ) => {
-    // Create a new folder and add it to the current folders list
-    console.log("check name", folderName, index, folderName[index]);
-
+  const handleCreateFolder = (index: number, currentFolder: Folder) => {
     const newFolder: Folder = {
       name: folderName[index],
       type: "folder",
@@ -96,6 +79,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     addFolder(currentFolders[0], currentFolder.name, newFolder);
 
     setCurrentFolders([...currentFolders]);
+    setFolderName((prev: any) => ({ ...prev, [index]: "" }));
   };
 
   const removeFolder = (
@@ -124,7 +108,11 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     if (!root.children) {
       root.children = [];
     }
-    if (name === root.name) {
+    if (
+      name === root.name &&
+      !root.children.find((c) => c.name === newFolder.name) &&
+      newFolder.name.trim() !== ""
+    ) {
       root.children.push(newFolder);
       return;
     }
@@ -132,29 +120,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
       if (child.type === "folder") addFolder(child, name, newFolder);
     });
   };
-  // const getFolderByName = (children: Folder[], name: string) => {
-  //   const next = children.find((c) => c.name === name);
-  //   console.log("check name next", next);
-  //   if (next) {
-  //     return next;
-  //   } else {
-  //     children.forEach((child) => {
-  //       if (child.children) getFolderByName(child.children, name);
-  //     });
-  //   }
-  // };
 
-  // const getCurrentIndex = (children: Folder[], index: number): number => {
-  //   console.log("check children inside", children, currentFolders);
-
-  //   const next = children.find((c) => c.isOpen);
-  //   console.log("check next", next);
-  //   if (!next?.children) {
-  //     return index;
-  //   } else {
-  //     return getCurrentIndex(next.children, index++);
-  //   }
-  // };
   useEffect(() => {
     console.log("update currentFolders", currentFolders);
   }, [currentFolders]);
@@ -203,6 +169,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
               <Input
                 size="xs"
                 width="auto"
+                value={folderName[index]}
                 onChange={(e) =>
                   setFolderName((prev: any) => ({
                     ...prev,
