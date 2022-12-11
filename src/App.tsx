@@ -27,10 +27,14 @@ type Props = {
   initialFolders: Folder[];
 };
 
+type NameStore = {
+  [key: string]: string;
+};
+
 // todos: would be good if folders had more unique identifier than name
 const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
-  const [folderName, setFolderName] = useState<any>({});
-  const [fileName, setFileName] = useState<any>({});
+  const [folderName, setFolderName] = useState<NameStore>({});
+  const [fileName, setFileName] = useState<NameStore>({});
   const [currentFolders, setCurrentFolders] = useState([...initialFolders]);
 
   const handleFolderClick = (folder: Folder, index: number) => {
@@ -65,7 +69,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     addFolder(currentFolders[0], currentFolder.name, newFile);
 
     setCurrentFolders([...currentFolders]);
-    setFileName((prev: any) => ({ ...prev, [index]: "" }));
+    setFileName((prev) => ({ ...prev, [index]: "" }));
   };
 
   const handleDeleteFolder = (folder: Folder, index: number) => {
@@ -96,7 +100,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     addFolder(currentFolders[0], currentFolder.name, newFolder);
 
     setCurrentFolders([...currentFolders]);
-    setFolderName((prev: any) => ({ ...prev, [index]: "" }));
+    setFolderName((prev) => ({ ...prev, [index]: "" }));
   };
 
   const removeFolder = (
@@ -188,7 +192,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
                 width="auto"
                 value={folderName[index]}
                 onChange={(e) =>
-                  setFolderName((prev: any) => ({
+                  setFolderName((prev) => ({
                     ...prev,
                     [index]: e.target.value,
                   }))
@@ -208,7 +212,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
                 width="auto"
                 value={fileName[index]}
                 onChange={(e) =>
-                  setFileName((prev: any) => ({
+                  setFileName((prev) => ({
                     ...prev,
                     [index]: e.target.value,
                   }))
