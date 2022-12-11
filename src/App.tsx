@@ -61,9 +61,22 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     }
   };
 
-  const handleDeleteFolder = (folder: Folder) => {
+  const handleDeleteFolder = (folder: Folder, index: number) => {
     // Remove the clicked folder from the current folders list
-    setCurrentFolders(currentFolders.filter((f) => f !== folder));
+    if (currentFolders[0].children) {
+      removeFolder(currentFolders[0], currentFolders[0].children, folder.name);
+
+      const updatedCurrentFolder = currentFolders.filter((f) => f !== folder);
+      // index (inclusive) until end
+      if (index < currentFolders.length - 1) {
+        const mutateFolders = [...updatedCurrentFolder];
+        const newFolders = mutateFolders.splice(0, index);
+        setCurrentFolders([...newFolders]);
+      } else {
+        // todo: bug: if remove is in middle, all to the right need to be removed as well with splice
+        setCurrentFolders(updatedCurrentFolder);
+      }
+    }
   };
 
   const handleCreateFolder = (
@@ -83,6 +96,26 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     addFolder(currentFolders[0], currentFolder.name, newFolder);
 
     setCurrentFolders([...currentFolders]);
+  };
+
+  const removeFolder = (
+    parent: Folder | null,
+    children: Folder[],
+    name: string
+  ) => {
+    const findTarget = children.find((c) => c.name === name);
+    if (!findTarget) {
+      children.forEach((child) => {
+        if (child.children) {
+          return removeFolder(child, child.children, name);
+        }
+      });
+    }
+    const newChildren = children.filter((c) => c.name !== name);
+    if (parent) {
+      parent.children = newChildren;
+      return;
+    }
   };
 
   const addFolder = (root: Folder, name: string, newFolder: Folder) => {
@@ -138,7 +171,7 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
                   variant="outline"
                   colorScheme="pink"
                   size="xs"
-                  onClick={() => handleDeleteFolder(folder)}
+                  onClick={() => handleDeleteFolder(folder, index)}
                 >
                   X
                 </Button>
