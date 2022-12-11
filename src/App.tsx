@@ -150,6 +150,11 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
                   {file.type === "folder" ? (
                     <Button
                       variant="outline"
+                      colorScheme={
+                        file.name === currentFolders[index + 1]?.name
+                          ? "blue"
+                          : ""
+                      }
                       onClick={() => handleFolderClick(file, index)}
                     >
                       {file.name}
@@ -161,8 +166,6 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
               );
             })}
             {folder?.children?.length === 0 && "empty"}
-
-            <ul></ul>
             <VStack alignItems="flex-start">
               <Input
                 size="xs"
