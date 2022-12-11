@@ -1,119 +1,32 @@
-import "./App.css";
-
-import { Box, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Input,
+  ListItem,
+  UnorderedList,
+  VStack,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
-type Folder = {
+import { ChakraProvider } from "@chakra-ui/react";
+import { mockFiles } from "./mockFiles";
+
+export type Folder = {
   name: string;
   type: "folder" | "file";
   children?: Folder[];
   isOpen?: boolean;
 };
 
-const mockFiles: Folder[] = [
-  {
-    type: "folder",
-    name: "My Files",
-    children: [
-      {
-        type: "folder",
-        name: "trucks",
-        children: [{ type: "folder", name: "unit", children: [] }],
-      },
-      {
-        type: "folder",
-        name: "Photos",
-        children: [
-          {
-            type: "folder",
-            name: "cars",
-            children: [
-              { type: "folder", name: "school", children: [] },
-              { type: "folder", name: "somethin", children: [] },
-            ],
-          },
-          {
-            type: "folder",
-            name: "Photos 2",
-            children: [
-              { type: "folder", name: "waht", children: [] },
-              {
-                type: "folder",
-                name: "movies",
-                children: [
-                  {
-                    type: "file",
-                    name: "video1.mp4",
-                  },
-                  {
-                    type: "file",
-                    name: "video2.mov",
-                  },
-                  {
-                    type: "folder",
-                    name: "foobar",
-                    children: [
-                      {
-                        type: "folder",
-                        name: "foobar2",
-                        children: [],
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            type: "folder",
-            name: "naturefolder",
-            children: [
-              {
-                type: "file",
-                name: "video1.mp4",
-              },
-              {
-                type: "file",
-                name: "video2.mov",
-              },
-              {
-                type: "folder",
-                name: "beachfolder",
-                children: [
-                  {
-                    type: "folder",
-                    name: "forestfolder",
-                    children: [],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        type: "folder",
-        name: "Videos",
-        children: [
-          {
-            type: "file",
-            name: "video1.mp4",
-          },
-          {
-            type: "file",
-            name: "video2.mov",
-          },
-        ],
-      },
-    ],
-  },
-];
-
 // todo: names should be unique
 function App() {
   return (
     <div className="App">
-      <FileExplorer initialFolders={mockFiles} />
+      <ChakraProvider>
+        <FileExplorer initialFolders={mockFiles} />
+      </ChakraProvider>
     </div>
   );
 }
@@ -167,43 +80,24 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
       children: [],
     };
 
-    // @ts-ignore
-    const root = addFolder(currentFolders[0], currentFolder.name, newFolder);
+    addFolder(currentFolders[0], currentFolder.name, newFolder);
 
     setCurrentFolders([...currentFolders]);
   };
 
-  const addFolder = (
-    root: Folder,
-    name: string,
-    newFolder: Folder
-  ): Folder | undefined => {
+  const addFolder = (root: Folder, name: string, newFolder: Folder) => {
     if (root.type !== "folder") return;
-    console.log("check root", root, name);
-    if (name === root.name) {
-      // @ts-ignore
-      if (!root.children) {
-        root.children = [];
-      }
-      root.children.push(newFolder);
-      return root;
+
+    if (!root.children) {
+      root.children = [];
     }
-    // @ts-ignore
-    // const next = root.children.find((c) => c.name === name);
-    // console.log("check name next", next);
-    // if (next) {
-    //   // todos: always have children
-    //   if (!next.children) {
-    //     next.children = [];
-    //   }
-    //   next.children.push(newFolder);
-    //   return root;
-    // } else {
-    // @ts-ignore
+    if (name === root.name) {
+      root.children.push(newFolder);
+      return;
+    }
     root.children.forEach((child) => {
-      if (child && child.type === "folder") addFolder(child, name, newFolder);
+      if (child.type === "folder") addFolder(child, name, newFolder);
     });
-    // }
   };
   // const getFolderByName = (children: Folder[], name: string) => {
   //   const next = children.find((c) => c.name === name);
@@ -233,42 +127,61 @@ const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
   }, [currentFolders]);
 
   return (
-    <Flex flexDirection="row">
+    <Flex m="4" flexDirection="row">
       {currentFolders.map((folder, index) => {
-        console.log(folder);
-
         return (
           <Box key={index} p={2} style={{ flexDirection: "column" }}>
-            <h3>{folder.name}</h3>
-            <ul>
-              {folder?.children?.map((file) => {
-                return (
-                  <li key={file.name}>
-                    {file.type === "folder" ? (
-                      <button onClick={() => handleFolderClick(file, index)}>
-                        {file.name}
-                      </button>
-                    ) : (
-                      file.name
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-            <button onClick={() => handleDeleteFolder(folder)}>
-              Delete folder
-            </button>
-            <input
-              onChange={(e) =>
-                setFolderName((prev: any) => ({
-                  ...prev,
-                  [index]: e.target.value,
-                }))
-              }
-            ></input>
-            <button onClick={() => handleCreateFolder(index, folder)}>
-              Create folder
-            </button>
+            <HStack>
+              <h3>{folder.name}</h3>
+              {index > 0 && (
+                <Button
+                  variant="outline"
+                  colorScheme="pink"
+                  size="xs"
+                  onClick={() => handleDeleteFolder(folder)}
+                >
+                  X
+                </Button>
+              )}
+            </HStack>
+            {folder?.children?.map((file) => {
+              return (
+                <Box my="2" key={file.name}>
+                  {file.type === "folder" ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => handleFolderClick(file, index)}
+                    >
+                      {file.name}
+                    </Button>
+                  ) : (
+                    file.name
+                  )}
+                </Box>
+              );
+            })}
+            {folder?.children?.length === 0 && "empty"}
+
+            <ul></ul>
+            <VStack alignItems="flex-start">
+              <Input
+                size="xs"
+                width="auto"
+                onChange={(e) =>
+                  setFolderName((prev: any) => ({
+                    ...prev,
+                    [index]: e.target.value,
+                  }))
+                }
+              ></Input>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() => handleCreateFolder(index, folder)}
+              >
+                Create folder
+              </Button>
+            </VStack>
           </Box>
         );
       })}
