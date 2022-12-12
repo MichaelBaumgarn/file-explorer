@@ -1,7 +1,6 @@
 import { Box, Button, Text } from "@chakra-ui/react";
 
 import { Folder } from "./FileExplorer";
-import React from "react";
 
 export interface IFolderListProps {
   folder: Folder;

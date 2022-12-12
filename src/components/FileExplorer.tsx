@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { CreateFolder } from "./CreateFolder";
 import { FolderHeader } from "./FolderHeader";
@@ -19,6 +19,7 @@ type Props = {
 export type NameStore = {
   [key: string]: string;
 };
+
 // todos: would be good if folders had more unique identifier than name
 export const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
   const [folderName, setFolderName] = useState<NameStore>({});
@@ -37,7 +38,6 @@ export const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
     if (index !== currentFolders.length - 1) {
       const mutateFolders = [...currentFolders];
       const newFolders = mutateFolders.splice(0, index + 1);
-      console.log("check new", newFolders);
       setCurrentFolders([...newFolders, folder]);
     } else {
       setCurrentFolders([...currentFolders, folder]);
@@ -57,7 +57,6 @@ export const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
   };
 
   const handleDeleteFolder = (folder: Folder, index: number) => {
-    // Remove the clicked folder from the current folders list
     if (currentFolders[0].children) {
       removeFolder(currentFolders[0], currentFolders[0].children, folder.name);
 
@@ -68,7 +67,6 @@ export const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
         const newFolders = mutateFolders.splice(0, index);
         setCurrentFolders([...newFolders]);
       } else {
-        // todo: bug: if remove is in middle, all to the right need to be removed as well with splice
         setCurrentFolders(updatedCurrentFolder);
       }
     }
@@ -125,10 +123,6 @@ export const FileExplorer: React.FC<Props> = ({ initialFolders }) => {
       if (child.type === "folder") addFolder(child, name, newFolder);
     });
   };
-
-  useEffect(() => {
-    console.log("update currentFolders", currentFolders);
-  }, [currentFolders]);
 
   return (
     <Flex m="4" flexDirection="row">
