@@ -1,4 +1,4 @@
-import { Folder } from "./App";
+import { Folder } from "./components/FileExplorer";
 
 export const mockFiles: Folder[] = [
   {
