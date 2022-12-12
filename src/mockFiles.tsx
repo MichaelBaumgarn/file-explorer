@@ -7,8 +7,8 @@ export const mockFiles: Folder[] = [
     children: [
       {
         type: "folder",
-        name: "trucks",
-        children: [{ type: "folder", name: "unit", children: [] }],
+        name: "Work",
+        children: [{ type: "folder", name: "2022", children: [] }],
       },
       {
         type: "folder",
@@ -19,14 +19,14 @@ export const mockFiles: Folder[] = [
             name: "cars",
             children: [
               { type: "folder", name: "school", children: [] },
-              { type: "folder", name: "somethin", children: [] },
+              { type: "folder", name: "uni", children: [] },
             ],
           },
           {
             type: "folder",
             name: "Photos 2",
             children: [
-              { type: "folder", name: "waht", children: [] },
+              { type: "folder", name: "flowers", children: [] },
               {
                 type: "folder",
                 name: "movies",
@@ -41,11 +41,11 @@ export const mockFiles: Folder[] = [
                   },
                   {
                     type: "folder",
-                    name: "foobar",
+                    name: "food",
                     children: [
                       {
                         type: "folder",
-                        name: "foobar2",
+                        name: "drinks",
                         children: [],
                       },
                     ],
@@ -56,7 +56,7 @@ export const mockFiles: Folder[] = [
           },
           {
             type: "folder",
-            name: "naturefolder",
+            name: "nature",
             children: [
               {
                 type: "file",
@@ -68,11 +68,11 @@ export const mockFiles: Folder[] = [
               },
               {
                 type: "folder",
-                name: "beachfolder",
+                name: "beach",
                 children: [
                   {
                     type: "folder",
-                    name: "forestfolder",
+                    name: "forest",
                     children: [],
                   },
                 ],
