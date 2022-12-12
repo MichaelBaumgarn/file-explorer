@@ -7,11 +7,6 @@ export const mockFiles: Folder[] = [
     children: [
       {
         type: "folder",
-        name: "Work",
-        children: [{ type: "folder", name: "2022", children: [] }],
-      },
-      {
-        type: "folder",
         name: "Photos",
         children: [
           {
@@ -94,6 +89,11 @@ export const mockFiles: Folder[] = [
             name: "video2.mov",
           },
         ],
+      },
+      {
+        type: "folder",
+        name: "Work",
+        children: [{ type: "folder", name: "2022", children: [] }],
       },
     ],
   },

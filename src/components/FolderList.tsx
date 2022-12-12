@@ -24,11 +24,13 @@ export function FolderList({
           <Box my="2" key={file.name}>
             {file.type === "folder" ? (
               <Button
+                minWidth="150"
                 variant="outline"
                 colorScheme={
                   file.name === currentFolders[index + 1]?.name ? "blue" : ""
                 }
                 onClick={() => handleFolderClick(file, index)}
+                justifyContent="flex-start"
               >
                 {file.name}
               </Button>
